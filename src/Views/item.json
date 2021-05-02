@@ -1,0 +1,20 @@
+
+[{
+    "name":"Orange",
+    "image":"http://www.azspagirls.com/files/2010/09/orange.jpg",
+    "price":10,
+    "quantity":1
+
+},{
+    "name":"Lemon",
+    "image":"https://3.imimg.com/data3/IC/JO/MY-9839190/organic-lemon-250x250.jpg",
+    "price":100,
+    "quantity":1
+
+},{
+    "name":"Banana",
+    "image":"http://images.all-free-download.com/images/graphicthumb/vector_illustration_of_ripe_bananas_567893.jpg",
+    "price":101,
+    "quantity":1
+
+}]
