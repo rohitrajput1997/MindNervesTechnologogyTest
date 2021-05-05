@@ -14,7 +14,7 @@ function ShoppingCart(props) {
   React.useEffect(()=>{
     let data=SessionStorage.getUser()
    if(data!==null){
-    props.dispatch( manageCartItem(JSON.parse(data)))
+    props.dispatch( manageCartItem(data))
     setSessionData(data)
    }
   },[])
