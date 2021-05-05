@@ -1,0 +1,2 @@
+export const GET_CART_DATA = "GET_CART_DATA";
+export const MANAGE_CART_DATA="MANAGE_CART_DATA"

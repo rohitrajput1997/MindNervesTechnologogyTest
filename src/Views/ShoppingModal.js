@@ -1,11 +1,15 @@
 import React from "react";
+import { connect } from "react-redux";
+import manageCartItem from "../Redux/Action/Action";
 import items from "./item.json";
 
+
 function ShoppingModal(props) {
-  let sessionStorageData = sessionStorage.getItem("cart");
+  const storeData=props.cartData.cartItem
+  let sessionStorageData = props.manageCart.manageItem;
   const [cartData, setCartData] = React.useState([]);
   React.useEffect(() => {
-    setCartData(JSON.parse(sessionStorageData));
+    setCartData(sessionStorageData);
   }, [sessionStorageData]);
 
   const [sessionItem, setSessionItem] = React.useState(null);
@@ -14,8 +18,8 @@ function ShoppingModal(props) {
   }, [props]);
 
   const handleCartItem = () => {
-    let sessionData = sessionStorage.getItem("cart")
-      ? JSON.parse(sessionStorage.getItem("cart"))
+    let sessionData = props.manageCart.manageItem
+      ? props.manageCart.manageItem
       : null;
     let data =
       sessionData !== null
@@ -33,7 +37,7 @@ function ShoppingModal(props) {
       1
     );
     setCartData(values);
-    sessionStorage.setItem("cart", JSON.stringify(values));
+    props.dispatch( manageCartItem(values))
     handleCartItem();
   };
 
@@ -60,7 +64,7 @@ function ShoppingModal(props) {
     }
 
     setCartData(values);
-    sessionStorage.setItem("cart", JSON.stringify(values));
+    props.dispatch( manageCartItem(values))
     handleCartItem();
   };
 
@@ -96,7 +100,7 @@ function ShoppingModal(props) {
                       <td>
                         (
                         {
-                          items.filter((data) => data.name === item.name)[0]
+                          storeData.filter((data) => data.name === item.name)[0]
                             .price
                         }
                         )
@@ -111,6 +115,7 @@ function ShoppingModal(props) {
                               0,
                               item.price,
                             ])}
+                            disabled={item.quantity===0}
                           >
                             -
                           </button>
@@ -134,6 +139,8 @@ function ShoppingModal(props) {
                           <button
                             className="delete-item btn btn-danger"
                             onClick={handleRemoveItem.bind(this, item.name)}
+                           
+
                           >
                             X
                           </button>
@@ -171,4 +178,9 @@ function ShoppingModal(props) {
   );
 }
 
-export default ShoppingModal;
+ const mapStateToProps=(state)=>({
+  cartData:state.cartData,
+  manageCart:state.manageCart
+})
+
+export default connect(mapStateToProps)(ShoppingModal);

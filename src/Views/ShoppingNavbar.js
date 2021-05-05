@@ -1,14 +1,19 @@
 import React from "react";
+import { connect } from "react-redux";
+import SessionStorage from "../Common/SessionStorage";
+import manageCartItem from "../Redux/Action/Action";
 import ShoppingModal from "./ShoppingModal";
 function ShoppingCart(props) {
+ 
   const [sessionItem, setSessionItem] = React.useState(null);
   React.useEffect(() => {
     handleCartItem();
   }, [props]);
 
   const handleCartItem = () => {
-    let sessionData = sessionStorage.getItem("cart")
-      ? JSON.parse(sessionStorage.getItem("cart"))
+ 
+    let sessionData = props.manageCart.manageItem.length!==0
+      ? props.manageCart.manageItem
       : null;
     let data =
       sessionData !== null
@@ -19,7 +24,9 @@ function ShoppingCart(props) {
     setSessionItem(data);
   };
   const handleRemoveItem = () => {
-    sessionStorage.removeItem("cart");
+
+    props.dispatch(manageCartItem([]))
+    SessionStorage.removeUser()
     handleCartItem();
   };
   return (
@@ -50,4 +57,9 @@ function ShoppingCart(props) {
     </>
   );
 }
-export default ShoppingCart;
+const mapStateToProps=(state)=>({
+ 
+  manageCart:state.manageCart
+})
+
+export default connect(mapStateToProps)(ShoppingCart);

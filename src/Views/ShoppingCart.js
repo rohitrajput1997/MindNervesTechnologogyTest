@@ -1,18 +1,30 @@
 /** @format */
 
 import React from "react";
-import item from "./item.json";
+import { connect } from "react-redux";
+import SessionStorage from "../Common/SessionStorage";
+import manageCartItem from "../Redux/Action/Action"
+
 import ShoppingNavbar from "./ShoppingNavbar";
 
-function ShoppingCart() {
+function ShoppingCart(props) {
+ const cartData=props.cartData.cartItem
+ const manageCart=props.manageCart.manageItem
   const [sessionData,setSessionData]=React.useState([])
-  const handleAddItem = (value) => {
-    let data = sessionStorage.getItem("cart");
-    let sessionDataArray = JSON.parse(data);
+  React.useEffect(()=>{
+    let data=SessionStorage.getUser()
+   if(data!==null){
+    props.dispatch( manageCartItem(JSON.parse(data)))
+    setSessionData(data)
+   }
+  },[])
 
-    if (data === null) {
-      sessionStorage.setItem("cart", JSON.stringify([value]));
+  const handleAddItem = (value) => {
+    let sessionDataArray = manageCart;
+    if (manageCart.length === 0) {
+     props.dispatch( manageCartItem([value]))
       setSessionData(value)
+
     } else {
       let condtion = sessionDataArray.find(
         (element) => element.name === value.name
@@ -20,7 +32,7 @@ function ShoppingCart() {
 
       if (condtion === undefined) {
         let appendArr = [...sessionDataArray, value];
-        sessionStorage.setItem("cart", JSON.stringify(appendArr));
+        props.dispatch( manageCartItem(appendArr))
         setSessionData(appendArr)
       } else {
         sessionDataArray.find(
@@ -28,11 +40,9 @@ function ShoppingCart() {
         ).quantity += value.quantity;
         sessionDataArray.find((element) => element.name === value.name).price +=
           value.price;
-
         let appendArr = [...sessionDataArray];
-        sessionStorage.setItem("cart", JSON.stringify(appendArr));
+        props.dispatch( manageCartItem(appendArr))
         setSessionData(appendArr)
-
       }
     }
   };
@@ -46,8 +56,9 @@ function ShoppingCart() {
 
       <div className="container">
         <div className="row">
-          {item.length !== 0 ? (
-            item.map((item, index) => {
+          {cartData.length !== 0 ? (
+
+            cartData.map((item, index) => {
               return (
                 <div className="col" key={index}>
                   <div className="card shadow">
@@ -79,4 +90,9 @@ function ShoppingCart() {
   );
 }
 
-export default ShoppingCart;
+const mapStateToProps=(state)=>({
+  cartData:state.cartData,
+  manageCart:state.manageCart
+})
+
+export default connect(mapStateToProps)(ShoppingCart);
